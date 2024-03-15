@@ -77,7 +77,5 @@ public class Server {
 
         firstPlayerPW.flush();
         secondPlayerPW.flush();
-
-
     }
 }

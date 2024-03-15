@@ -8,37 +8,41 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class LocalHostPlayer {
-    public static void main(String[] args) throws IOException {
-        Socket socket = null;
+    public static void main(String[] args){
         try {
-            socket = new Socket("localhost", 4999); //CLIENTE 1 SE CONECTA EN LOCALHOST
-        } catch (IOException e) {
-            System.err.println("FAILED TO CONNECT TO SERVER");
-            System.exit(1);
-        }
-        Scanner sc = new Scanner(System.in);
-
-        PrintWriter out = new PrintWriter(socket.getOutputStream());
-
-        while (true){
-            InputStreamReader in = new InputStreamReader(socket.getInputStream());
-            BufferedReader bf = new BufferedReader(in);
-
-            String str;
-            boolean isTurnActive = false;
-            while (!(str = bf.readLine()).equals("END")){
-                System.out.println("Server: " + str);
-                if(str.equals("Turn of player 1")) isTurnActive = true;
+            Socket socket = null;
+            try {
+                socket = new Socket("localhost", 4999); //CLIENTE 1 SE CONECTA EN LOCALHOST
+            } catch (IOException e) {
+                System.err.println("FAILED TO CONNECT TO SERVER");
+                System.exit(1);
             }
-            if(isTurnActive){
-                System.out.println("Select a tile (Row, col)");
-                int row = sc.nextInt();
-                int col = sc.nextInt();
-                out.println(row);
-                out.println(col);
-                out.flush();
-                isTurnActive = false;
+            Scanner sc = new Scanner(System.in);
+
+            PrintWriter out = new PrintWriter(socket.getOutputStream());
+
+            while (true){
+                InputStreamReader in = new InputStreamReader(socket.getInputStream());
+                BufferedReader bf = new BufferedReader(in);
+
+                String str;
+                boolean isTurnActive = false;
+                while (!(str = bf.readLine()).equals("END")){
+                    System.out.println("Server: " + str);
+                    if(str.equals("Turn of player 1")) isTurnActive = true;
+                }
+                if(isTurnActive){
+                    System.out.println("Select a tile (Row, col)");
+                    int row = sc.nextInt();
+                    int col = sc.nextInt();
+                    out.println(row);
+                    out.println(col);
+                    out.flush();
+                    isTurnActive = false;
+                }
             }
+        }catch (IOException e){
+            System.err.println("LOST CONNECTION WITH THE SERVER");
         }
     }
 }
